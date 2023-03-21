@@ -1,2 +1,2 @@
 # mutex-default
-infra.go default mutex driver.
+infra.Go default mutex driver.
