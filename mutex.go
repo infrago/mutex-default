@@ -20,7 +20,7 @@ type (
 	defaultSetting struct {
 	}
 	defaultValue struct {
-		Expiry time.Time
+		Expire time.Time
 	}
 )
 
@@ -43,23 +43,23 @@ func (this *defaultConnect) Close() error {
 }
 
 // 待优化，加上超时设置
-func (this *defaultConnect) Lock(key string, expiry time.Duration) error {
+func (this *defaultConnect) Lock(key string, expire time.Duration) error {
 	now := time.Now()
 
 	if vv, ok := this.locks.Load(key); ok {
 		if tm, ok := vv.(defaultValue); ok {
-			if tm.Expiry.UnixNano() > now.UnixNano() {
+			if tm.Expire.UnixNano() > now.UnixNano() {
 				return errors.New("existed")
 			}
 		}
 	}
 
-	if expiry <= 0 {
-		expiry = this.instance.Config.Expiry
+	if expire <= 0 {
+		expire = this.instance.Config.Expire
 	}
 
 	value := defaultValue{
-		Expiry: now.Add(this.instance.Config.Expiry),
+		Expire: now.Add(this.instance.Config.Expire),
 	}
 
 	this.locks.Store(key, value)
